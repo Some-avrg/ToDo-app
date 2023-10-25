@@ -1,33 +1,46 @@
 import box from "./MainBox.module.css";
 import { TextInput } from "../TextInput/TextInput";
-
 import { List } from "../List/List";
 import React from "react";
 
-const DEFAULT_TODO_LIST = [
-  { id: 1, name: "Task 1", description: "Description 1", checked: false },
-  { id: 2, name: "Task 2", description: "Description 2", checked: true },
-];
+let DEFAULT_TODO_LIST: Todo[] = [];
 
 export default function MainBox() {
   //список todo
+  if (localStorage.todoList !== undefined)
+    DEFAULT_TODO_LIST = JSON.parse(localStorage.todoList);
+  else
+    DEFAULT_TODO_LIST = [
+      {
+        id: 1,
+        name: "Test task",
+        description: "Test task description",
+        checked: false,
+      },
+    ];
+
   const [todos, setTodos] = React.useState(DEFAULT_TODO_LIST);
-  //id элемента дл редактирования
-  const [todoIdForEdit, setTodoIdForEdit] = React.useState<Todo["id"] | null> (null);
+
+  //id элемента для редактирования
+  const [todoIdForEdit, setTodoIdForEdit] = React.useState<Todo["id"] | null>(
+    null
+  );
   const selectTodoIdForEdit = (id: Todo["id"]) => {
     setTodoIdForEdit(id);
-  }
+  };
+
+  const saveTodo = () => {
+    localStorage.clear();
+    localStorage.todoList = JSON.stringify(todos);
+  };
 
   const addTodo = ({ name, description }: Omit<Todo, "checked" | "id">) => {
     //проверем есть ли элементы в списке
     let ID;
-    if(todos[todos.length -1] == null) ID = 1;
-    else ID = todos[todos.length -1].id + 1;
+    if (todos[todos.length - 1] == null) ID = 1;
+    else ID = todos[todos.length - 1].id + 1;
     //добавляем todo в список
-    setTodos([
-      ...todos,
-      { id: ID, description, name, checked: false },
-    ]);
+    setTodos([...todos, { id: ID, description, name, checked: false }]);
   };
 
   //пробегаем по списку, меняем check у элемента с данным id
@@ -65,8 +78,15 @@ export default function MainBox() {
       <div className={box.title}>ToDo List</div>
 
       <div>
-        <TextInput mode="add" addTodo={addTodo} />
-        <List todos={todos} todoIdForEdit={todoIdForEdit} changeTodo={changeTodo} checkTodo={checkTodo} deleteTodo={deleteTodo} selectTodoIdForEdit={selectTodoIdForEdit} />
+        <TextInput mode="add" addTodo={addTodo} saveTodo={saveTodo} />
+        <List
+          todos={todos}
+          todoIdForEdit={todoIdForEdit}
+          changeTodo={changeTodo}
+          checkTodo={checkTodo}
+          deleteTodo={deleteTodo}
+          selectTodoIdForEdit={selectTodoIdForEdit}
+        />
       </div>
     </div>
   );

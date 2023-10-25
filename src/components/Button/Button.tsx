@@ -1,7 +1,7 @@
 import styles from "./Button.module.css";
 import React from "react";
 interface ButtonProps extends React.ComponentPropsWithRef<"button"> {
-    color: "green" | "red" | "orange"
+    color: "green" | "red" | "orange" | "blue"
 }
 export const Button: React.FC<ButtonProps> = ({children, onClick, color, ...props}) =>  {
     const className = `${styles.top} ${styles[`top_${color}`]}`;
