@@ -1,5 +1,6 @@
 import styles from "./Button.module.css";
 import React from "react";
+
 interface ButtonProps extends React.ComponentPropsWithRef<"button"> {
     color: "green" | "red" | "orange" | "blue"
 }

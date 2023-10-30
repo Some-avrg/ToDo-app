@@ -1,20 +1,17 @@
 import React from "react";
 import styles from "./TodoItem.module.css";
 import { Button } from "../Button/Button";
+import { useTodo } from "../../context";
 
 interface TodoItemProps {
   todo: Todo;
-  checkTodo: (id: Todo["id"]) => void;
-  deleteTodo: (id: Todo["id"]) => void;
-  selectTodoIdForEdit: (id: Todo["id"]) => void;
 }
 
 export const TodoItem: React.FC<TodoItemProps> = ({
-  todo,
-  checkTodo,
-  deleteTodo,
-  selectTodoIdForEdit
+  todo
 }) => {
+  const {checkTodo, deleteTodo, selectTodoIdForEdit} = useTodo();
+
   return (
     <div>
       <div className={styles.item}>

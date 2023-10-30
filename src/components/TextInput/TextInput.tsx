@@ -1,6 +1,7 @@
 import React from "react";
 import textBar from "./TextInput.module.css";
 import { Button } from "../Button/Button";
+import { useTodo } from "../../context";
 
 const DEFAULT_TODO = {
   name: "",
@@ -9,19 +10,18 @@ const DEFAULT_TODO = {
 
 interface AddTextInputProps {
   mode: "add";
-  addTodo: ({ name, description }: Omit<Todo, "checked" | "id">) => void;
-  saveTodo: () => void;
 }
 
 interface EditTextInputProps {
   mode: "edit";
   editTodo: Omit<Todo, "id" | "checked">;
-  changeTodo: ({ name, description }: Omit<Todo, "checked" | "id">) => void;
 }
 
 type TextInputProps = AddTextInputProps | EditTextInputProps;
 
 export const TextInput: React.FC<TextInputProps> = (props) => {
+  const {addTodo, saveTodo, changeTodo} = useTodo();
+
   //режим редактирования или нет
   const isEdit = props.mode === "edit";
   //подставляем в input текст по дефолту
@@ -37,9 +37,9 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
   const onClick = () => {
     const todoItem = { name: todo.name, description: todo.description };
     if (isEdit) {
-      return props.changeTodo(todoItem);
+      return changeTodo(todoItem);
     }
-    props.addTodo(todoItem);
+    addTodo(todoItem);
     setTodo(DEFAULT_TODO);
   };
 
@@ -76,7 +76,7 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
       {/* если режим редактировани, то другая кнопка */}
       {!isEdit && (
         <div>
-          <Button color="blue" onClick={props.saveTodo}>
+          <Button color="blue" onClick={saveTodo}>
             Save Todos
           </Button>
           <Button color="green" onClick={onClick}>
